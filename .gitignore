@@ -1,3 +1,9 @@
+.exe
+.log
+log.txt
+.gitignore
+.gitattributes
+
 #################
 ## Eclipse
 #################
