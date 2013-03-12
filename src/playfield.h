@@ -8,9 +8,7 @@
 #define FIELD_HEIGHT 24
 #define OFFSET_X 1
 #define OFFSET_Y 4
-#define BLOCK_SIZE 16
-
-extern int playfield[FIELD_HEIGHT * FIELD_WIDTH];
+#define BLOCK_SIZE 32
 
 void clear_playfield();
 void copy_block_to_playfield(block *b);

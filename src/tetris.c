@@ -1,4 +1,4 @@
-// gcc tetris.c block.c playfield.c allegro_framework.c -o tetris -lallegro-5.0.8-monolith-mt-debug -std=c99 -Wall
+// gcc src/tetris.c src/block.c src/playfield.c src/allegro_framework.c -o tetris -lallegro-5.0.8-monolith-mt-debug -std=c99 -Wall
 
 #include "tetris.h"
 #include "playfield.h"
@@ -32,8 +32,12 @@ ALLEGRO_COLOR get_color(int color_index)
 void game_over()
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
-    print_textf(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, white_color, TEXT_ALIGN_CENTER, "GAME OVER!");
+    print_textf(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 15, white_color, TEXT_ALIGN_CENTER, "GAME OVER!");
+    print_textf(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 15, white_color, TEXT_ALIGN_CENTER, "You got %d points", score);
+    print_textf(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 30, white_color, TEXT_ALIGN_CENTER, "You cleared %d lines", lines);
+    print_textf(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 45, white_color, TEXT_ALIGN_CENTER, "You reached level %d", level);
     al_flip_display();
+    al_rest(2.0);
     wait_for_keypress();
 }
 
@@ -71,6 +75,11 @@ void logic()
             rotate_block_right(&current_block);
             if (did_block_collide(&current_block, 0, 0))
                 rotate_block_left(&current_block);
+        }
+        else if (is_key_down(ALLEGRO_KEY_SPACE)) {
+            key_delay = 20;
+            while (!did_block_collide(&current_block, 0, 1))
+                current_block.y++;
         }
         else
             key_delay = 0;
@@ -140,7 +149,7 @@ void render()
 }
 
 int main() {
-    init_framework(SCREEN_WIDTH, SCREEN_HEIGHT, false);
+    init_framework("tetris", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     reset_game();
     run_game_loop(logic, render);
     return 0;
