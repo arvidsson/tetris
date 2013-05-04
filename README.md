@@ -1,4 +1,4 @@
 tetris
 ======
 
-Simple tetris clone written in C using Allegro 5.
+Minimalistic tetris clone written in C using Allegro 5.

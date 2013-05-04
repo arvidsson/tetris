@@ -1,5 +1,8 @@
 #include "playfield.h"
 
+#define MAX_COLORS 8
+extern ALLEGRO_COLOR color_index[MAX_COLORS];
+
 int playfield[FIELD_HEIGHT * FIELD_WIDTH] = {0};
 
 void clear_playfield()
@@ -13,13 +16,16 @@ void clear_playfield()
 
 void copy_block_to_playfield(block *b)
 {
-    for (int y = 0; y < 4; y++)
-        for (int x = 0; x < 4; x++)
-            if (b->data & (1 << ((y * 4) + x)))
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            if (b->data & (1 << ((y * 4) + x))) {
                 playfield[((b->y + y) * FIELD_WIDTH) + b->x + x] = b->color;
+            }
+        }
+    }
 }
 
-bool did_block_collide(block *b, int dx, int dy)
+bool is_collision(block *b, int dx, int dy)
 {
     for (int y = 0; y < 4; y ++) {
         for (int x = 0; x < 4; x ++) {
@@ -42,13 +48,15 @@ int check_for_lines()
         int total = 0;
         
         for (int x = 0; x < FIELD_WIDTH; x++) {
-            if (playfield[(y * FIELD_WIDTH) + x])
+            if (playfield[(y * FIELD_WIDTH) + x]) {
                 total++;
+            }
         }
         
         if (total == FIELD_WIDTH) {
-            for(int i = y; i > 0; i--)
+            for(int i = y; i > 0; i--) {
                 memcpy(&playfield[i * FIELD_WIDTH], &playfield[(i - 1) * FIELD_WIDTH], sizeof(int) * FIELD_WIDTH);
+            }
                 
             memset(&playfield[0], 0, sizeof(int) * FIELD_WIDTH);
             lines++;
@@ -66,7 +74,7 @@ void draw_playfield()
             int y0 = (y - OFFSET_Y) * BLOCK_SIZE;
             int x1 = x0 + BLOCK_SIZE;
             int y1 = y0 + BLOCK_SIZE;
-            al_draw_filled_rectangle(x0, y0, x1, y1, get_color(playfield[y * FIELD_WIDTH + x]));
+            al_draw_filled_rectangle(x0, y0, x1, y1, color_index[playfield[y * FIELD_WIDTH + x]]);
         }
     }
 }

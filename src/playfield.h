@@ -1,8 +1,8 @@
 #ifndef TETRIS_PLAYFIELD_H
 #define TETRIS_PLAYFIELD_H
 
+#include "allegro_framework.h"
 #include "block.h"
-#include "tetris.h"
 
 #define FIELD_WIDTH 10
 #define FIELD_HEIGHT 24
@@ -12,7 +12,7 @@
 
 void clear_playfield();
 void copy_block_to_playfield(block *b);
-bool did_block_collide(block *b, int dx, int dy);
+bool is_collision(block *b, int dx, int dy);
 int check_for_lines();
 void draw_playfield();
 

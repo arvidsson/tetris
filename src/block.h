@@ -1,6 +1,8 @@
 #ifndef TETRIS_BLOCK_H
 #define TETRIS_BLOCK_H
 
+#include "allegro_framework.h"
+
 typedef struct {
     int type;   // what kind of tetromino (e.g. I, O, L...)
     int color;  // what color index the block has
@@ -10,7 +12,6 @@ typedef struct {
 } block;
 
 void generate_block(block *b);
-void generate_next_block(block *b);
 void rotate_block_left(block *b);
 void rotate_block_right(block *b);
 void draw_block(block* b);
