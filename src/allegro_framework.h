@@ -46,14 +46,17 @@ void init_framework(const char *window_title, int display_width, int display_hei
 void destroy_framework();
 
 /*
-    Sets up resolution independence using a buffer bitmap.
+    Sets up a viewport using either a transformation or a buffer bitmap.
+    Use this to achieve resolution independence.
  */
-void setup_buffer_bitmap(int width, int height);
+void setup_viewport(int width, int height, bool use_buffer_bitmap);
 
 /*
-    Sets up resolution independence using a transformation.
+    Determines alt-tab behavior (switching out & in from an application).
+    If enabled, the game logic and rendering will pause until the application
+    becomes active again.
  */
-void setup_transformation(int width, int height);
+void alt_tab_should_pause(bool yesno);
 
 /*
     Runs the game loop; the heart of the game!
@@ -108,12 +111,6 @@ int get_mouse_x();
 int get_mouse_y();
 
 /*
-    Returns true if the mouse was moved.
-    Check this before you get the mouse movement deltas.
- */
-bool is_moused_moved();
-
-/*
     Returns mouse delta movement in x.
  */
 int get_mouse_dx();
@@ -147,7 +144,7 @@ int wait_for_keypress();
 /*
     Returns a random integer between [min, max].
  */
-int get_random_int(int max, int min);
+int get_random_int(int min, int max);
 
 /*
     Returns a random float between [min, max].
@@ -160,44 +157,10 @@ float get_random_float(float min, float max);
 ALLEGRO_FONT* get_default_font();
 
 /*
-    Some default colors.
+    Default colors.
  */
 extern ALLEGRO_COLOR black_color;
 extern ALLEGRO_COLOR white_color;
-
-/*
-    2D geometry objects.
- */
-typedef struct {
-    float x, y;
-} Point;
-
-typedef struct {
-    float x1, y1;
-    float x2, y2;
-} Line;
-
-typedef struct {
-    float x, y;
-    float w, h;
-} Rect;
-
-typedef struct {
-    float x, y;
-    float r;
-} Circle;
-
-/*
-    2D geometry and intersection functions.
- */
-float distance_between_points(Point p1, Point p2);
-bool points_are_same_side_of_line(Line l, Point p1, Point p2);
-bool lines_intersect(Line l1, Line l2);
-bool rectangles_intersect(Rect r1, Rect r2);
-bool rectangle_contains_point(Rect r, Point p);
-bool circles_intersect(Circle c1, Circle c2);
-bool circle_contains_point(Circle c, Point p);
-bool circle_and_rectangle_intersect(Circle c, Rect r);
 
 #ifdef __cplusplus
    }
