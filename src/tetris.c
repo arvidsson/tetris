@@ -1,39 +1,23 @@
-// gcc src/tetris.c src/block.c src/playfield.c src/allegro_framework.c -o tetris -lallegro-5.0.8-monolith-mt-debug -std=c99 -Wall
-
 #include "allegro_framework.h"
 #include "playfield.h"
 #include "block.h"
+#include "colors.h"
 
 #define SCREEN_WIDTH ((FIELD_WIDTH+5) * BLOCK_SIZE)
 #define SCREEN_HEIGHT ((FIELD_HEIGHT-2) * BLOCK_SIZE)
 
-#define MAX_COLORS 8
-ALLEGRO_COLOR color_index[MAX_COLORS];
+static block_type current_block;    // the block that is falling
+static block_type next_block;       // the next block coming down
+static bool dead = false;           // whether we are dead or not
+static int score = 0;               // accumulated score
+static int lines = 0;               // no of cleared lines
+static int level = 0;               // determines block fall speed, increases over time
+static int fall_delay = 0;          // the amount of time before moving a block down
+static int fall_speed = 30;         // block fall speed
+static int key_delay = 0;           // the amount of time before checking for next keypress
+static int counter = 0;             // used for counting
 
-block current_block;    // the block that is falling
-block next_block;       // the next block coming down
-bool dead = false;      // whether we are dead or not
-int score = 0;          // accumulated score
-int lines = 0;          // no of cleared lines
-int level = 0;          // determines block fall speed, increases over time
-int fall_delay = 0;     // the amount of time before moving a block down
-int fall_speed = 30;    // block fall speed
-int key_delay = 0;      // the amount of time before checking for next keypress
-int counter = 0;        // used for counting
-
-void setup_color_index()
-{
-    color_index[0] = al_map_rgb(0, 0, 0);
-    color_index[1] = al_map_rgb(0, 255, 255);
-    color_index[2] = al_map_rgb(255, 255, 0);
-    color_index[3] = al_map_rgb(128, 0, 128);
-    color_index[4] = al_map_rgb(0, 255, 0);
-    color_index[5] = al_map_rgb(255, 0, 0);
-    color_index[6] = al_map_rgb(0, 0, 255);
-    color_index[7] = al_map_rgb(255, 128, 0);
-}
-
-void game_over()
+static void game_over()
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_draw_textf(get_default_font(), white_color, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 15, ALLEGRO_ALIGN_CENTER, "GAME OVER!");
@@ -45,18 +29,16 @@ void game_over()
     wait_for_keypress();
 }
 
-void reset_game()
+static void setup_game()
 {
     dead = false;
     score = lines = level = 0;
-    generate_block(&current_block);
-    generate_block(&next_block);
-    next_block.x = FIELD_WIDTH;
-    next_block.y = 4;
+    generate_block_at(&current_block, (FIELD_WIDTH / 2) - 2, 0);
+    generate_block_at(&next_block, FIELD_WIDTH, 4);
     clear_playfield();
 }
 
-void update()
+static void update()
 {
     //we check input if enough time has passed since the last keypress
     if (key_delay <= 0) {
@@ -100,9 +82,8 @@ void update()
         fall_delay = fall_speed;
         
         if (is_collision(&current_block, 0, 1)) {
-            if (current_block.y == 0) {
+            if (current_block.y == 0)
                 dead = true;
-            }
         
             copy_block_to_playfield(&current_block);
             
@@ -112,9 +93,7 @@ void update()
             current_block.y = 0;
             
             // generate a new next block
-            generate_block(&next_block);
-            next_block.x = FIELD_WIDTH;
-            next_block.y = 4;
+            generate_block_at(&next_block, FIELD_WIDTH, 4);
         }
         else {
             current_block.y++;
@@ -143,15 +122,14 @@ void update()
     
     if (dead) {
         game_over();
-        reset_game();
+        setup_game();
     }
     
-    if (is_key_down(ALLEGRO_KEY_ESCAPE)) {
+    if (is_key_down(ALLEGRO_KEY_ESCAPE))
         quit();
-    }
 }
 
-void draw()
+static void draw()
 {    
     // draw border
     ALLEGRO_COLOR border_color = al_map_rgb(0, 63, 128);
@@ -170,7 +148,7 @@ void draw()
 int main() {
     init_framework("tetris", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     setup_color_index();
-    reset_game();
+    setup_game();
     run_game_loop(update, draw);
     return 0;
 }

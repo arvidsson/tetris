@@ -1,5 +1,5 @@
-#ifndef TETRIS_PLAYFIELD_H
-#define TETRIS_PLAYFIELD_H
+#ifndef INCLUDED_PLAYFIELD_H
+#define INCLUDED_PLAYFIELD_H
 
 #include "allegro_framework.h"
 #include "block.h"
@@ -11,8 +11,8 @@
 #define BLOCK_SIZE 32
 
 void clear_playfield();
-void copy_block_to_playfield(block *b);
-bool is_collision(block *b, int dx, int dy);
+void copy_block_to_playfield(block_type *block);
+bool is_collision(block_type *block, int dx, int dy);
 int check_for_lines();
 void draw_playfield();
 
