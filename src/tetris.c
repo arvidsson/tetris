@@ -145,7 +145,8 @@ static void draw()
     al_draw_textf(get_default_font(), white_color, 5, SCREEN_HEIGHT - 12, ALLEGRO_ALIGN_LEFT, "Score: %d  Lines: %d", score, lines);
 }
 
-int main() {
+int main(int argc, char *argv[])
+{
     init_framework("tetris", SCREEN_WIDTH, SCREEN_HEIGHT, false);
     setup_color_index();
     setup_game();
