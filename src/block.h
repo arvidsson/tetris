@@ -9,11 +9,11 @@ typedef struct {
     int x, y;   // location in the playfield
     int dir;    // used for rotating the block
     int data;   // data about the block shape (see block_data)
-} block_type;
+} Block;
 
-void generate_block_at(block_type *block, int x, int y);
-void rotate_block_left(block_type *block);
-void rotate_block_right(block_type *block);
-void draw_block(block_type *block);
+void generate_block_at(Block *block, int x, int y);
+void rotate_block_left(Block *block);
+void rotate_block_right(Block *block);
+void draw_block(Block *block);
 
 #endif

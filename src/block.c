@@ -13,7 +13,7 @@ static int block_data[7][4] = {
     {0x2E00, 0x4460, 0x0E80, 0xC440}  // L
 };
 
-void generate_block_at(block_type *block, int x, int y)
+void generate_block_at(Block *block, int x, int y)
 {
     int i = get_random_int(0, 6);
     block->type = i;
@@ -24,23 +24,25 @@ void generate_block_at(block_type *block, int x, int y)
     block->data = block_data[i][0];
 }
 
-void rotate_block_left(block_type *block)
+void rotate_block_left(Block *block)
 {
     block->dir--;
-    if (block->dir < 0)
+    if (block->dir < 0) {
         block->dir = 3;
+    }
     block->data = block_data[block->type][block->dir];
 }
 
-void rotate_block_right(block_type *block)
+void rotate_block_right(Block *block)
 {
     block->dir++;
-    if (block->dir > 3)
+    if (block->dir > 3) {
         block->dir = 0;
+    }
     block->data = block_data[block->type][block->dir];
 }
 
-void draw_block(block_type *block)
+void draw_block(Block *block)
 {
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {

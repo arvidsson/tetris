@@ -11,8 +11,8 @@
 #define BLOCK_SIZE 32
 
 void clear_playfield();
-void copy_block_to_playfield(block_type *block);
-bool is_collision(block_type *block, int dx, int dy);
+void copy_block_to_playfield(Block *block);
+bool is_collision(Block *block, int dx, int dy);
 int check_for_lines();
 void draw_playfield();
 
